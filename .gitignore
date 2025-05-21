@@ -1,0 +1,7 @@
+.env
+.venv
+.idea
+/__pycache__/
+djangoProject/__pycache__/
+ads/__pycache__/
+__pycache__

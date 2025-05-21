@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Мои предложения обмена - Barter Platform{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1 class="mb-0">Мои предложения обмена</h1>
+    </div>
+    <div class="card-body">
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link {% if not filter_status %}active{% endif %}" 
+                   href="{% url 'ads:proposal_list' %}">Все</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if filter_status == 'pending' %}active{% endif %}" 
+                   href="{% url 'ads:proposal_list' %}?status=pending">Ожидают</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if filter_status == 'accepted' %}active{% endif %}" 
+                   href="{% url 'ads:proposal_list' %}?status=accepted">Принятые</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if filter_status == 'rejected' %}active{% endif %}" 
+                   href="{% url 'ads:proposal_list' %}?status=rejected">Отклоненные</a>
+            </li>
+        </ul>
+        
+        {% if proposals %}
+            <div class="list-group">
+                {% for proposal in proposals %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">
+                                <a href="{% url 'ads:ad_detail' proposal.ad_sender.id %}">{{ proposal.ad_sender.title }}</a>
+                                ↔
+                                <a href="{% url 'ads:ad_detail' proposal.ad_receiver.id %}">{{ proposal.ad_receiver.title }}</a>
+                            </h5>
+                            <span class="badge bg-{% if proposal.status == 'pending' %}warning{% elif proposal.status == 'accepted' %}success{% else %}danger{% endif %}">
+                                {{ proposal.get_status_display }}
+                            </span>
+                        </div>
+                        <p class="mb-1">{{ proposal.comment|default:"Без комментария" }}</p>
+                        <small class="text-muted">
+                            Создано {{ proposal.created_at|date:"d.m.Y H:i" }}
+                        </small>
+                        
+                        {% if proposal.status == 'pending' and proposal.ad_receiver.user == user %}
+                            <div class="mt-2">
+                                <form method="post" action="{% url 'ads:proposal_update' proposal.id %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="status" value="accepted">
+                                    <button type="submit" class="btn btn-sm btn-success">Принять</button>
+                                </form>
+                                <form method="post" action="{% url 'ads:proposal_update' proposal.id %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="status" value="rejected">
+                                    <button type="submit" class="btn btn-sm btn-danger">Отклонить</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Пагинация -->
+            {% if page_obj.has_other_pages %}
+                <nav class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1&status={{ filter_status }}">Первая</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&status={{ filter_status }}">←</a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}&status={{ filter_status }}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}&status={{ filter_status }}">→</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&status={{ filter_status }}">Последняя</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-info">Предложения не найдены</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
