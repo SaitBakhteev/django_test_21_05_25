@@ -1,11 +1,30 @@
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.contrib import messages
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.urls import reverse_lazy
 from ..models import Ad, ExchangeProposal
 from ..forms import AdForm  # Создайте forms.py если еще нет
 from django.db import models
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 
 
-class AdListView(ListView):
+# Загрузка главной страницы
+class LandingView(TemplateView):
+    template_name = 'ads/main_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['show_success_modal'] = self.request.GET.get('show_success') == '1'
+        return context
+
+
+@login_required
+def index(request):
+    return render(request, 'ads/main_page.html')
+
+
+class AdListView(LoginRequiredMixin, ListView):
     model = Ad
     template_name = 'ads/ad_list.html'
     context_object_name = 'ads'
@@ -13,8 +32,38 @@ class AdListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        # Добавьте здесь логику фильтрации, если нужно
         return queryset
+
+
+class AdCreateView(LoginRequiredMixin, CreateView):
+    model = Ad
+    form_class = AdForm
+    template_name = 'ads/ad_form.html'
+    success_url = reverse_lazy('main-page')
+    success_message = "Объявление успешно создано!"
+
+    def form_valid(self, form):
+        messages.success(self.request, "Объявление успешно создано!")
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        # Перенаправляем на главную с параметром для показа модального окна
+        return reverse_lazy('main-page') + '?show_success=1'
+
+class AdUpdateView(UpdateView):
+    model = Ad
+    form_class = AdForm
+    template_name = 'ads/ad_form.html'
+
+    def get_success_url(self):
+        return reverse_lazy('main-page')
+
+
+class AdDeleteView(DeleteView):
+    model = Ad
+    template_name = 'ads/ad_confirm_delete.html'  # Создайте если нужно
+    success_url = reverse_lazy('main-page')
 
 
 class AdDetailView(DetailView):
@@ -27,34 +76,6 @@ class AdDetailView(DetailView):
         if self.request.user.is_authenticated:
             context['user_ads'] = Ad.objects.filter(user=self.request.user)
         return context
-
-
-class AdCreateView(CreateView):
-    model = Ad
-    form_class = AdForm  # Или fields = ['title', 'description', ...]
-    template_name = 'ads/ad_form.html'
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('ads:ad_detail', kwargs={'pk': self.object.pk})
-
-
-class AdUpdateView(UpdateView):
-    model = Ad
-    form_class = AdForm
-    template_name = 'ads/ad_form.html'
-
-    def get_success_url(self):
-        return reverse_lazy('ads:ad_detail', kwargs={'pk': self.object.pk})
-
-
-class AdDeleteView(DeleteView):
-    model = Ad
-    template_name = 'ads/ad_confirm_delete.html'  # Создайте если нужно
-    success_url = reverse_lazy('ads:ad_list')
 
 
 class ProposalListView(ListView):
@@ -88,7 +109,7 @@ class ProposalCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('ads:proposal_list')
+        return reverse_lazy('ad-list')
 
 
 class ProposalUpdateView(UpdateView):
@@ -97,4 +118,4 @@ class ProposalUpdateView(UpdateView):
     template_name = 'ads/proposal_update.html'  # Создайте если нужно
 
     def get_success_url(self):
-        return reverse_lazy('ads:proposal_list')
+        return reverse_lazy('proposal_list')

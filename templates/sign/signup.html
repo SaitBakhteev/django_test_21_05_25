@@ -3,14 +3,14 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-    {% if form.instance.id %}Редактирование объявления{% else %}Создание объявления{% endif %} - Barter Platform
+    Регистрация - Barter Platform
 {% endblock %}
 
 {% block content %}
         <form action="" method="post" style="accent-color: #0a53be">
             {% csrf_token %}
             {{ form  }}                
-        <input type="submit" value="Создать">
+            <input type="submit" value="Зарегистрироваться">
         </form>
 {% endblock %}
 

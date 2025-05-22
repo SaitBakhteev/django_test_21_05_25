@@ -12,19 +12,19 @@
         <ul class="nav nav-tabs mb-4">
             <li class="nav-item">
                 <a class="nav-link {% if not filter_status %}active{% endif %}" 
-                   href="{% url 'ads:proposal_list' %}">Все</a>
+                   href="{% url 'proposal-list' %}">Все</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {% if filter_status == 'pending' %}active{% endif %}" 
-                   href="{% url 'ads:proposal_list' %}?status=pending">Ожидают</a>
+                   href="{% url 'proposal-list' %}?status=pending">Ожидают</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {% if filter_status == 'accepted' %}active{% endif %}" 
-                   href="{% url 'ads:proposal_list' %}?status=accepted">Принятые</a>
+                   href="{% url 'proposal-list' %}?status=accepted">Принятые</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {% if filter_status == 'rejected' %}active{% endif %}" 
-                   href="{% url 'ads:proposal_list' %}?status=rejected">Отклоненные</a>
+                   href="{% url 'proposal-list' %}?status=rejected">Отклоненные</a>
             </li>
         </ul>
         
@@ -34,9 +34,9 @@
                     <div class="list-group-item">
                         <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">
-                                <a href="{% url 'ads:ad_detail' proposal.ad_sender.id %}">{{ proposal.ad_sender.title }}</a>
+                                <a href="{% url 'ad-detail' proposal.ad_sender.id %}">{{ proposal.ad_sender.title }}</a>
                                 ↔
-                                <a href="{% url 'ads:ad_detail' proposal.ad_receiver.id %}">{{ proposal.ad_receiver.title }}</a>
+                                <a href="{% url 'ad-detail' proposal.ad_receiver.id %}">{{ proposal.ad_receiver.title }}</a>
                             </h5>
                             <span class="badge bg-{% if proposal.status == 'pending' %}warning{% elif proposal.status == 'accepted' %}success{% else %}danger{% endif %}">
                                 {{ proposal.get_status_display }}
@@ -49,12 +49,13 @@
                         
                         {% if proposal.status == 'pending' and proposal.ad_receiver.user == user %}
                             <div class="mt-2">
-                                <form method="post" action="{% url 'ads:proposal_update' proposal.id %}" class="d-inline">
+                                <form method="post" action="{% url 'proposal-update' proposal.id %}"
+                                      class="d-inline">
                                     {% csrf_token %}
                                     <input type="hidden" name="status" value="accepted">
                                     <button type="submit" class="btn btn-sm btn-success">Принять</button>
                                 </form>
-                                <form method="post" action="{% url 'ads:proposal_update' proposal.id %}" class="d-inline">
+                                <form method="post" action="{% url 'proposal-update' proposal.id %}" class="d-inline">
                                     {% csrf_token %}
                                     <input type="hidden" name="status" value="rejected">
                                     <button type="submit" class="btn btn-sm btn-danger">Отклонить</button>

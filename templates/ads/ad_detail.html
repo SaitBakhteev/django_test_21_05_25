@@ -29,8 +29,8 @@
                     {% if user.is_authenticated %}
                         <div>
                             {% if user == ad.user %}
-                                <a href="{% url 'ads:ad_edit' ad.id %}" class="btn btn-warning">Редактировать</a>
-                                <a href="{% url 'ads:ad_delete' ad.id %}" class="btn btn-danger">Удалить</a>
+                                <a href="{% url 'ad-update'  ad.id  %}" class="btn btn-warning">Редактировать</a>
+                                <a href="{% url 'ad-delete'   ad.id  %}" class="btn btn-danger">Удалить</a>
                             {% else %}
                                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#proposalModal">
                                     Предложить обмен
@@ -45,7 +45,7 @@
 </div>
 
 <!-- Модальное окно для предложения обмена -->
-{% if user.is_authenticated and user != ad.user %}
+{#{% if user.is_authenticated and user != ad.user %}#}
 <div class="modal fade" id="proposalModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -53,7 +53,7 @@
                 <h5 class="modal-title">Предложить обмен</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form method="post" action="{% url 'ads:proposal_create' %}">
+            <form method="post" action="{% url 'proposal-create' %}">
                 {% csrf_token %}
                 <input type="hidden" name="ad_receiver" value="{{ ad.id }}">
                 <div class="modal-body">
@@ -78,17 +78,5 @@
         </div>
     </div>
 </div>
-{% endif %}
-{% endblock %}
-
-{% block extra_js %}
-<script>
-// Инициализация модального окна
-document.addEventListener('DOMContentLoaded', function() {
-    var proposalModal = document.getElementById('proposalModal');
-    if (proposalModal) {
-        var modal = new bootstrap.Modal(proposalModal);
-    }
-});
-</script>
+{#{% endif %}#}
 {% endblock %}

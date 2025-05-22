@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,10 +41,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Сторонние приложения
     'django_filters',
     'rest_framework',
-    'ads',
-    'drf_spectacular'
+    'drf_spectacular',
+    'crispy_forms',
+    'crispy_bootstrap5',
+
+    # Наши приложения
+    'ads',  # основной функционал
+    'sign',  # авторизация
 
 ]
 
@@ -80,6 +91,13 @@ WSGI_APPLICATION = 'djangoProject.wsgi.application'
 
 DATABASES = {
     'default': {
+        # 'ENGINE': 'django.db.backends.postgresql', # при использовании postgres,
+        # 'HOST': os.getenv('DB_HOST'),
+        # 'PORT': os.getenv('DB_PORT'),
+        # 'USER': os.getenv('DB_USER'),
+        # 'NAME': os.getenv('DB_NAME'),
+        # 'PASSWORD': os.getenv('DB_PASSWORD'),
+
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite',
     }
@@ -124,6 +142,9 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 STATIC_URL = 'static/'
 
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -142,7 +163,23 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
-SPECTACULAR_SETTINGS = {'TITLE': 'ads_API',
-                        'DESCRIPTION': 'API для программы',
-                        'VERSION': '0.0.1',
-                        'SERVE_INCLUDE_SCHEMA': True}
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Barter Platform API',
+    'DESCRIPTION': 'API для платформы обмена вещами',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        'persistAuthorization': True,
+    },
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SCHEMA_PATH_PREFIX': r'/api/',
+}
+
+# Настройки авторизации:
+LOGIN_URL = '/sign/login/'  # URL для перенаправления неавторизованных пользователей
+LOGIN_REDIRECT_URL = '/ads'  # Куда перенаправлять после успешного входа
+LOGOUT_REDIRECT_URL = '/sign/login/'  # Куда перенаправлять после выхода
+ACCOUNT_EMAIL_REQUIRED=True
+ACCOUNT_AUTHENTICATION_METHOD='username_email'  # можно вводить или username или email при авторизации
+ACCOUNT_UNIQUE_EMAIL=True
