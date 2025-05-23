@@ -1,16 +1,20 @@
 from django.contrib import messages
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic import (ListView, DetailView,
+                                  CreateView, UpdateView,
+                                  DeleteView, TemplateView)
 from django.urls import reverse_lazy
-from ..models import Ad, ExchangeProposal
-from ..forms import AdForm  # Создайте forms.py если еще нет
 from django.db import models
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from django_filters.views import FilterView
 
+from ..models import Ad, ExchangeProposal
+from ..forms import AdForm
+from ..filters import AdFilter
 
 # Загрузка главной страницы
-class LandingView(TemplateView):
+class LandingView(LoginRequiredMixin, TemplateView):
     template_name = 'ads/main_page.html'
 
     def get_context_data(self, **kwargs):
@@ -24,11 +28,12 @@ def index(request):
     return render(request, 'ads/main_page.html')
 
 
-class AdListView(LoginRequiredMixin, ListView):
+class AdListView(LoginRequiredMixin, FilterView):
     model = Ad
     template_name = 'ads/ad_list.html'
     context_object_name = 'ads'
     paginate_by = 10
+    filterset_class = AdFilter
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -62,8 +67,13 @@ class AdUpdateView(UpdateView):
 
 class AdDeleteView(DeleteView):
     model = Ad
-    template_name = 'ads/ad_confirm_delete.html'  # Создайте если нужно
+    template_name = 'ads/ad_confirm_delete.html'
     success_url = reverse_lazy('main-page')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object'] = self.get_object()
+        return context
 
 
 class AdDetailView(DetailView):
@@ -89,7 +99,7 @@ class ProposalListView(ListView):
         if status:
             queryset = queryset.filter(status=status)
 
-        # Показываем только связанные с текущим пользователем предложения
+        # Показывать только связанные с текущим пользователем предложения
         return queryset.filter(
             models.Q(ad_sender__user=self.request.user) |
             models.Q(ad_receiver__user=self.request.user)
@@ -99,7 +109,7 @@ class ProposalListView(ListView):
 class ProposalCreateView(CreateView):
     model = ExchangeProposal
     fields = ['ad_receiver', 'comment']
-    template_name = 'ads/proposal_form.html'  # Создайте если нужно
+    template_name = 'ads/proposal_form.html'
 
     def form_valid(self, form):
         form.instance.ad_sender = Ad.objects.get(
@@ -115,7 +125,7 @@ class ProposalCreateView(CreateView):
 class ProposalUpdateView(UpdateView):
     model = ExchangeProposal
     fields = ['status']
-    template_name = 'ads/proposal_update.html'  # Создайте если нужно
+    template_name = 'ads/proposal_update.html'
 
     def get_success_url(self):
         return reverse_lazy('proposal_list')

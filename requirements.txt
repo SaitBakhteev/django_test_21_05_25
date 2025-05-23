@@ -7,3 +7,4 @@ pillow==11.2.1
 python-dotenv==1.1.0
 PyYAML==6.0.2
 django-crispy-forms==2.4
+crispy-bootstrap5==2025.4
