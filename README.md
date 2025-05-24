@@ -38,8 +38,8 @@ pip install -r requirements.txt
 - в файле <i>djangoProject/settings.py</i> закомментируйте эти строки:
  
 ```bash
-'ENGINE': 'django.db.backends.sqlite3',
-'NAME': BASE_DIR / 'db.sqlite',
+#'ENGINE': 'django.db.backends.sqlite3',
+#'NAME': BASE_DIR / 'db.sqlite',
 ```
 - затем активизируйте эти строки 
 ```bash
