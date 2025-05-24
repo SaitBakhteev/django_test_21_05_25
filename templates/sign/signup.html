@@ -9,7 +9,7 @@
 {% block content %}
         <form action="" method="post" style="accent-color: #0a53be">
             {% csrf_token %}
-            {{ form  }}                
+            {{ form|crispy  }}                
             <input type="submit" value="Зарегистрироваться">
         </form>
 {% endblock %}

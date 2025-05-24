@@ -45,7 +45,7 @@
 </div>
 
 <!-- Модальное окно для предложения обмена -->
-{#{% if user.is_authenticated and user != ad.user %}#}
+{% if user.is_authenticated and user != ad.user %}
 <div class="modal fade" id="proposalModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -78,5 +78,5 @@
         </div>
     </div>
 </div>
-{#{% endif %}#}
+{% endif %}
 {% endblock %}

@@ -4,10 +4,12 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Все объявления</h1>
         {% if user.is_authenticated %}
-            <a href="{% url 'ad-create' %}" class="btn btn-primary">Добавить объявление</a>
+            <a href="{% url 'ad-create' %}" class="btn btn-success">
+                <i class="bi bi-plus-circle-fill me-2"></i> Добавить объявление
+            </a>
         {% endif %}
     </div>
-    
+
     <div class="row">
         <div class="col-md-4 mb-3">
             <form method="get" class="card card-body">
@@ -16,7 +18,7 @@
                 <button type="submit" class="btn btn-primary">Применить</button>
             </form>
         </div>
-        
+
         <div class="col-md-8">
             {% if ads %}
                 <div class="row">
@@ -42,11 +44,28 @@
                         </div>
                     {% endfor %}
                 </div>
-                
+
                 {% include "ads/includes/pagination.html" %}
             {% else %}
                 <div class="alert alert-info">Объявления не найдены</div>
             {% endif %}
         </div>
     </div>
+
+<!-- Модальное окно сообщений об успешном добавлении -->    
+{% if 'message' %}
+    
+    <div class="modal fade" id="proposalModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Успешное добавление </h5>
+                Новое объявление добавлено успешно
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endif %}
+
 {% endblock %}

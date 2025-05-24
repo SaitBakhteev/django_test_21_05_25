@@ -110,6 +110,7 @@ class AdRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
 @extend_schema_view(
     post=extend_schema(
+        tags=['Proposal'],
         summary="Создать предложение обмена",
         description="Создает новое предложение обмена между объявлениями",
         request=ExchangeProposalSerializer,
@@ -162,6 +163,7 @@ class ExchangeProposalCreateView(generics.CreateAPIView):
 
 @extend_schema_view(
     get=extend_schema(
+        tags=['Proposal'],
         summary="Получить список предложений",
         description="Возвращает список предложений обмена, связанных с текущим пользователем",
         parameters=[
@@ -184,6 +186,7 @@ class ExchangeProposalListView(generics.ListAPIView):
 
 @extend_schema_view(
     patch=extend_schema(
+        tags=['Proposal'],
         summary="Обновить статус предложения",
         description="Обновляет статус предложения обмена (только для получателя)",
         request=ExchangeProposalSerializer,

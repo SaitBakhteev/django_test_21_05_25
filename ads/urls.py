@@ -15,6 +15,9 @@ urlpatterns = [
     path('proposals/list/', web_views.ProposalListView.as_view(), name='proposal-list'),
     path('proposals/<int:pk>/', web_views.ProposalUpdateView.as_view(), name='proposal-update'),
 
+    # URL при обработке исключений
+    path('error/', web_views.PermissionDeniedView.as_view(), name='error'),
+
     # API Endpoints
     path('api/ads/', api_views.AdListCreateView.as_view(), name='api-ad-list'),
     path('api/ads/<int:pk>/', api_views.AdRetrieveUpdateDestroyView.as_view(), name='api-ad-detail'),

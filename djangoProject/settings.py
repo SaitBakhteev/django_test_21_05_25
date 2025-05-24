@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'crispy_forms',
     'crispy_bootstrap5',
+    'pytest', 'pytest_django',
 
     # Наши приложения
     'ads',  # основной функционал
