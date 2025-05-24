@@ -37,12 +37,12 @@ pip install -r requirements.txt
 #### Если у вас БД Postgres до выполните следующие действия:
 - в файле <i>djangoProject/settings.py</i> закомментируйте эти строки:
  
-```bash
+```python
 #'ENGINE': 'django.db.backends.sqlite3',
 #'NAME': BASE_DIR / 'db.sqlite',
 ```
 - затем активизируйте эти строки 
-```bash
+```python
 'ENGINE': 'django.db.backends.postgresql',
 'HOST': os.getenv('DB_HOST'),
 'PORT': os.getenv('DB_PORT'),
@@ -109,7 +109,7 @@ https://example.com/valid-image.jpg
 3. Для SECRET_KEY в <i>djangoProject/settings.py</i> стоит заглушка. Если хотите применить 
 другое значение SECRET_KEY, то закомментируйте проделайте следующие действия:
    - закомментируйте заглушку и активируйте строку ниже
-    ```bash
+    ```python
         #SECRET_KEY = 'django-insecure-)-rn7#1bmb+)159b#5dtxu-e+d3b59uvdu5*=^)*#@&6b)vh74'
         SECRET_KEY = os.getenv('SECRET_KEY')
     ```
