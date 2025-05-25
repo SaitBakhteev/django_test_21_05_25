@@ -41,26 +41,26 @@ pip install -r requirements.txt
 ### 3. Настройка БД и запуск (по умолчанию SQLite)
 
 #### Если у вас БД Postgres до выполните следующие действия:
-- в файле <i>djangoProject/settings.py</i> закомментируйте эти строки:
+- Откройте проект с помощью IDE и в файле <i>djangoProject/settings.py</i> закомментируйте строки, связанные с настройками SQLite и активируйте строки по Postgres:
  
 ```python
-#'ENGINE': 'django.db.backends.sqlite3',
-#'NAME': BASE_DIR / 'db.sqlite',
-```
-- затем активизируйте эти строки 
-```python
-'ENGINE': 'django.db.backends.postgresql',
-'HOST': os.getenv('DB_HOST'),
-'PORT': os.getenv('DB_PORT'),
-'USER': os.getenv('DB_USER'),
-'NAME': os.getenv('DB_NAME'),
-'PASSWORD': os.getenv('DB_PASSWORD'), 
+        # Настройки при использовании Sqlite
+        #'ENGINE': 'django.db.backends.sqlite3',
+        #'NAME': BASE_DIR / 'db.sqlite',
+
+        # Настройки при использовании Postgres
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
+        'USER': os.getenv('DB_USER'),
+        'NAME': os.getenv('DB_NAME'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
 ```
 - создайте в корневой директории проекта файл .env и пропишите там следующие данные:
 
 ```ini
-DB_HOST=localhost
-DB_PORT=5432
+DB_HOST=localhost  # или другой адрес, если не на локальном сервере
+DB_PORT=5432  # или другой порт
 DB_USER=<имя пользователя postgres>
 DB_NAME=<название вашей базы данных>
 DB_PASSWORD=<пароль базы данных>
