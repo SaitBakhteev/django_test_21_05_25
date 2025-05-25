@@ -4,32 +4,37 @@
 
 ### 1. Клонирование репозитория
 Выполните в терминале:
+
+Через SSH (рекомендуется)
 ```bash
-# Через SSH (рекомендуется)
 git clone git@github.com:SaitBakhteev/django_test_21_05_25.git
-
-# Или через HTTPS
+```
+Или через HTTPS
+```bash
 git clone https://github.com/SaitBakhteev/django_test_21_05_25.git
-
+```
+```bash
 cd django_test_21_05_25
-
 ```
 
 ### 2. Создание виртуального окружения
 
 ```bash
 python -m venv venv
+```
 
-
-# Активация окружения
-# Windows:
+#### Активация окружения
+Windows:
+```bash
 venv\Scripts\activate
-# Linux/Mac:
+```
+Linux/Mac:
+```bash
 source venv/bin/activate
-
-# Установка зависимостей
+```
+#### Установка зависимостей
+```bash
 pip install -r requirements.txt
-
 ```
 
 ### 3. Настройка БД и запуск (по умолчанию SQLite)
