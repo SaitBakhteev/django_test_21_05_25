@@ -66,7 +66,7 @@ DB_NAME=<название вашей базы данных>
 DB_PASSWORD=<пароль базы данных>
 ``` 
 
-#### Осуществите миграции
+#### Осуществите миграции и запустите сервер
 ```bash
 python manage.py makemigrations
 python manage.py migrate
