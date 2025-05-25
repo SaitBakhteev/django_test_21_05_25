@@ -13,6 +13,7 @@ git clone git@github.com:SaitBakhteev/django_test_21_05_25.git
 ```bash
 git clone https://github.com/SaitBakhteev/django_test_21_05_25.git
 ```
+Перейдите в директория проекта
 ```bash
 cd django_test_21_05_25
 ```
@@ -110,7 +111,7 @@ pytest ./ads/tests.py
 ```bash
 https://example.com/valid-image.jpg
 ```
-2. При создании объявления вводить валидные данные, все поля, смотреть всплывающие подсказки.
+2. При создании объявления вводить валидные данные в поля, смотреть всплывающие подсказки.
 3. Для SECRET_KEY в <i>djangoProject/settings.py</i> стоит заглушка. Если хотите применить 
 другое значение SECRET_KEY, то закомментируйте проделайте следующие действия:
    - закомментируйте заглушку и активируйте строку ниже
